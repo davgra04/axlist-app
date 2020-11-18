@@ -1,6 +1,6 @@
 import time
 
-from flask import Flask, request
+from flask import Flask, request, render_template
 from pprint import pformat
 
 app = Flask(__name__)
@@ -9,10 +9,13 @@ app = Flask(__name__)
 def hello_world():
     ts = time.time()
 
-    response = ["hello world!", "", ""]
-    response.append(f"time: {ts}")
-    response.append(f"remote_addr: {request.remote_addr}")
-    response.append(f"method: {request.method}")
-    response.append(f"path: {request.path}")
+    axlist = [
+        {
+            "ts": ts,
+            "remote_addr": request.remote_addr,
+            "method": request.method,
+            "path": request.path,
+        }
+    ]
 
-    return "<br>".join(response)
+    return render_template("accesslist.html", axlist=axlist)
