@@ -1,4 +1,5 @@
 import time
+import datetime as dt
 
 from flask import Flask, request, render_template
 from pprint import pformat
@@ -7,18 +8,34 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello_world():
-    ts = time.time()
+
+    ts = dt.datetime.now()
+
+    # I don't know what is going on here.... surely there's a better way
+    tzname = dt.datetime.now().astimezone().tzinfo.tzname(ts)
+
+    ip = request.remote_addr
+    if "X-Real-Ip" in request.headers:
+        ip = request.headers["X-Real-Ip"]
 
     axlist = [
         {
-            "ts": ts,
-            "remote_addr": request.remote_addr,
+            "ts": ts.strftime("%Y-%m-%d %H:%M:%S.%f"),
+            "remote_addr": ip,
             "method": request.method,
             "path": request.path,
         }
     ]
 
-    return render_template("accesslist.html", axlist=axlist)
+    axlist = axlist * 5
+
+
+    data = {
+        "axlist": axlist,
+        "tzname": tzname,
+    }
+
+    return render_template("accesslist.html", data=data)
 
 @app.route("/debug")
 def debug():

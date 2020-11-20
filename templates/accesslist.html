@@ -1,41 +1,32 @@
-<!doctype html>
-<html>
 
-<head>
-    <meta charset="utf-8">
-    <title>HELLO WORLD</title>
-    <meta name="descsription" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <!-- <link rel="stylesheet" href="index.css"> -->
-</head>
+{% extends "base.html" %}
+{% block body %}
 
-<body>
-    <h1 id="hello">Hello world!</h1>
-    <h3>Access List (last 100):</h3>
-    <table id="accesslist">
-        <thead>
-            <tr>
-                <th>Timestamp</th>
-                <th>IP</th>
-                <th>Method</th>
-                <th>Path</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in axlist %}
-            <tr>
-                <td>{{ item.ts }}</td>
-                <td>{{ item.remote_addr }}</td>
-                <td>{{ item.method }}</td>
-                <td>{{ item.path }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
+<h1 id="hello">Hello world!</h1>
+<h3>Access List (last 100):</h3>
+<p>Timestamps shown in {{ data.tzname }} timezone</p>
+<table id="accesslist">
+    <thead>
+        <tr>
+            <th>Timestamp</th>
+            <th>IP</th>
+            <th>Method</th>
+            <th>Path</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in data.axlist %}
+        <tr>
+            <td>{{ item.ts }}</td>
+            <td>{{ item.remote_addr }}</td>
+            <td>{{ item.method }}</td>
+            <td>{{ item.path }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
 
-    </table>
-    <h3>Other Links:</h3>
-    <a href="/debug">debug</a>
-</body>
+</table>
+<h3>Other Links:</h3>
+<a href="/debug">debug</a>
 
-</html>
+{% endblock %}
