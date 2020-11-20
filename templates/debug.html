@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>HELLO WORLD</title>
+    <meta name="descsription" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- <link rel="stylesheet" href="index.css"> -->
+</head>
+
+<body>
+    <a href="/">Home</a>
+    <h1>DEBUG</h1>
+    <div>
+        <h3>request object:</h3>
+        <table>
+            
+            {% for key, value in debug.request.items() %}
+            
+            <tr>
+                <td>
+                    <h4>{{ key }}</h4>
+                </td>
+                <td>
+                    {% autoescape false %}
+                    <p>{{ value | pprint | replace("\n", "<br>") }}</p>
+                    {% endautoescape %}
+                </td>
+            </tr>
+            
+            {% endfor %}
+            
+        </table>
+    </div>
+</body>
+
+</html>
