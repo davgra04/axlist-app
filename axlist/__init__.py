@@ -4,6 +4,7 @@ from flask import Flask, request
 
 import datetime as dt
 
+from pprint import pprint, pformat
 
 def create_app(test_config=None):
     # create and configure app
@@ -37,6 +38,13 @@ def create_app(test_config=None):
         ip = request.remote_addr
         if "X-Real-Ip" in request.headers:
             ip = request.headers["X-Real-Ip"]
+
+        # print("#"*80)
+        # print("request.remote_addr: " + pformat(request.remote_addr))
+        # print("request.headers: " + pformat(request.headers))
+        # print("request.method: " + pformat(request.method))
+        # print("request.path: " + pformat(request.path))
+        # print("#"*80)
 
         # headers_list = request.headers.getlist("X-Forwarded-For")
         # ip = headers_list[0] if headers_list else request.remote_addr
