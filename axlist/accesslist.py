@@ -1,43 +1,38 @@
-import time
+from flask import (
+    Blueprint, flash, g, redirect, render_template, request, url_for
+)
+
+from werkzeug.exceptions import abort
+
 import datetime as dt
 
-from flask import Flask, request, render_template
-from pprint import pformat
+from axlist.db import get_db
 
-app = Flask(__name__)
+bp = Blueprint("accesslist", __name__)
 
-@app.route("/")
-def hello_world():
 
-    ts = dt.datetime.now()
+@bp.route("/")
+def index():
+    # get data from db
+    db = get_db()
+    axlist = db.execute(
+        "SELECT ts, ip, method, path FROM accesslist ORDER BY id DESC LIMIT 500"
+    ).fetchall()
 
+    # figure out timezone
     # I don't know what is going on here.... surely there's a better way
-    tzname = dt.datetime.now().astimezone().tzinfo.tzname(ts)
+    tzname = dt.datetime.now().astimezone().tzinfo.tzname(dt.datetime.now())
 
-    ip = request.remote_addr
-    if "X-Real-Ip" in request.headers:
-        ip = request.headers["X-Real-Ip"]
-
-    axlist = [
-        {
-            "ts": ts.strftime("%Y-%m-%d %H:%M:%S.%f"),
-            "remote_addr": ip,
-            "method": request.method,
-            "path": request.path,
-        }
-    ]
-
-    axlist = axlist * 5
-
-
+    # form data and render
     data = {
-        "axlist": axlist,
+        "axlist": list(axlist),
         "tzname": tzname,
     }
 
     return render_template("accesslist.html", data=data)
 
-@app.route("/debug")
+
+@bp.route("/debug")
 def debug():
 
     debug = {
@@ -125,3 +120,4 @@ def debug():
     }
 
     return render_template("debug.html", debug=debug)
+
