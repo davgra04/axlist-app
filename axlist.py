@@ -19,3 +19,7 @@ def hello_world():
     ]
 
     return render_template("accesslist.html", axlist=axlist)
+
+@app.route("/debug")
+def debug():
+    return "DEBUG"
